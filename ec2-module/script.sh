@@ -5,10 +5,10 @@ exec 2>&1
 
 su -i
 
-sudo apt-get update -y 
+apt-get update -y 
 
-sudo apt-get install software-properties-common
-sudo apt-get install docker && sudo apt-get install docker-compose
+apt-get install software-properties-common
+sudo apt-get install docker && apt-get install docker-compose
 mkdir WerServer && cd WebServer
 git clone https://github.com/evershopcommerce/evershop.git
 sleep 30
