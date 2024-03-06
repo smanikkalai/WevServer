@@ -1,13 +1,13 @@
 # Installing dependencies.
 
-exec > >(tee -i /var/log/user-data.log)
-exec 2>&1
+sudo exec > >(tee -i /var/log/user-data.log)
+sudo exec 2>&1
 
 sudo apt-get update -y 
 
-sudo apt-get install software-properties-common
+sudo apt-get install software-properties-common -y
 
-sudo apt-get install docker && apt-get install docker-compose
+sudo apt-get install docker -y && sudo apt-get install docker-compose -y
 sudo usermod -aG docker $USER
 sudo chmod 777 /var/run/docker.sock
 
@@ -24,3 +24,5 @@ sleep 30
 docker-compose up -d
 
 sleep 45 
+
+npm run user:create -- --email "raj1995selva@gmail.com" --password "Selva@1995" --name "SelvarajManikkalai"
