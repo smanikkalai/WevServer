@@ -37,21 +37,17 @@ jobs:
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-      Terraform_init:
-      - name: Terraform Init
-        run: terraform init
-      Terraform_Validate:
-      - name: Terraform validate
-        run: terraform validate
-      Terraform_Plan:
-      - name: Terraform Plan
-        run: 
-          - terraform plan -tfplan
-        if: tfplan == 'tfplan'
-          - terraform plan -input=false
-
-      Terraform_Apply:  
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/"stage"' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
+    - name: Terraform Init
+      run: terraform init
+    
+    
+    - name: Terraform validate
+      run: terraform validate
+    
+    - name: Terraform Plan
+      run:  terraform plan -tfplan
+      if: tfplan == 'tfplan'
+        - terraform plan -input=false 
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/"stage"' && github.event_name == 'push'
+      run: terraform apply -auto-approve -input=false
