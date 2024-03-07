@@ -22,7 +22,4 @@ sleep 30
 
 
 docker-compose up -d
-
-sleep 45 
-
-npm run user:create -- --email "raj1995selva@gmail.com" --password "Selva@1995" --name "SelvarajManikkalai"
+sleep 45
