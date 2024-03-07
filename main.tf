@@ -1,14 +1,11 @@
-
-    # The configuration for the `remote` backend.
 terraform {
-    backend "remote" {
-        organization = "ProjectOfWebserver"
-                # The name of the Terraform Cloud workspace to store Terraform state files in.
+  cloud {
+    organization = "ProjectOfWebserver"
 
-        workspaces {
-          name = "Platform1-dev"
-        }
+    workspaces {
+      name = "Platform1-dev"
     }
+  }
 }
 
     # An example resource that does nothing.
