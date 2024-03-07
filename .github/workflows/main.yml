@@ -1,0 +1,60 @@
+
+
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "stage" ]
+  pull_request:
+
+env:
+  TF_CLOUD_ORGANIZATION: "ProjectOfWebserver"
+  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
+  TF_WORKSPACE: "Platform1-dev"
+  CONFIG_DIRECTORY: "./"
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      Terraform_init:
+      - name: Terraform Init
+        run: terraform init
+      Terraform_Validate:
+      - name: Terraform validate
+        run: terraform validate
+        
+      Terraform_Plan:
+      - name: Terraform Plan
+        run: 
+          - terraform plan -tfplan
+        if: tfplan == 'tfplan'
+          - terraform plan -input=false
+
+      Terraform_Apply:  
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/"stage"' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
