@@ -1,4 +1,4 @@
-# Installing dependencies.
+#!/bin/bash
 
 sudo exec > >(tee -i /var/log/user-data.log)
 sudo exec 2>&1
