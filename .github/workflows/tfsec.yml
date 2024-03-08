@@ -23,7 +23,7 @@ jobs:
       security-events: write
 
     steps:
-      - name: Clone repo
+      - name: git clone https://github.com/smanikkalai/WevServer.git
         uses: actions/checkout@v3
 
       - name: Run tfsec
@@ -36,3 +36,26 @@ jobs:
         with:
           # Path to SARIF file relative to the root of the repository
           sarif_file: tfsec.sarif
+      - name: Checkout
+      uses: actions/checkout@v3
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+      - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Init
+      run: terraform init
+    
+    
+      - name: Terraform validate
+      run: terraform validate
+    
+      - name: Terraform Plan
+      run:  terraform plan -tfplan
+      if: tfplan == 'tfplan'
+        - terraform plan -input=false 
+      - name: Terraform Apply
+      if: github.ref == 'refs/heads/"stage"' && github.event_name == 'push'
+      run: terraform apply -auto-approve -input=false    
