@@ -9,11 +9,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket         	   = "mycomponents-tfstate"
-    key              	   = "state/terraform.tfstate"
-    region         	   = "us-east-1"
-    encrypt        	   = true
-    dynamodb_table = "mycomponents_tf_lockid"
+    bucket = "test19765"
+    key    = "path/to/my/key"
+    region = "us-east-1"
   }
 }
 
