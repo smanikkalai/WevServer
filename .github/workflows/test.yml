@@ -24,7 +24,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: "us-east-1" # Replace <your-region> with your AWS region
         run: |
-          terraform login
           terraform init
 
       - name: Assume IAM Role
