@@ -7,10 +7,13 @@ terraform {
       version = "~> 5.38.0"
     }
   }
+}
 
-  backend "s3" {
+data "terraform_remote_state" "network" {
+  backend = "s3"
+  config = {
     bucket = "test19765"
-    key    = "path/to/my/key"
+    key    = "network/terraform.tfstate"
     region = "us-east-1"
   }
 }
