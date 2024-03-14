@@ -10,7 +10,7 @@ terraform {
   backend "s3" {
     bucket = "test19765"
     key    = "terraform.tfstate"
-    region = "us-west-1"
+    region = "us-east-1"
   }
 }
 
