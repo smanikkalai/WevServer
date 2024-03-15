@@ -55,8 +55,7 @@ jobs:
 
       # On push to "stage", build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-      
-      
+
       - name: Terraform Apply
         if: github.ref == 'refs/heads/stage' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
@@ -64,7 +63,6 @@ jobs:
       # - name: Terraform Destroy
       #   if: github.ref == 'refs/heads/stage' && github.event_name == 'push'
       #   run: terraform destroy -auto-approve -input=false
-
       - name: Extract private key file
         run: |
           terraform output private_key_file > private_key.pem
@@ -72,13 +70,23 @@ jobs:
 
         # Your other steps here...
 
-    # Define the artifacts to be uploaded
-    # It's placed outside of the build job, in the root of the workflow file
+      # Define the artifacts to be uploaded
+      # It's placed outside of the build job, in the root of the workflow file
       - name: Upload private key as artifact
         uses: actions/upload-artifact@v2
         with:
           name: private-key
           path: ec2-module
 
+      # Download the artifact
+      - name: Download private key artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: private_key
+          path: ./ec2-module
 
-          
+      # Optional: Verify the contents of the downloaded file
+      - name: List downloaded files
+        run: ls -l ./ec2-module
+
+      # Additional steps in your workflow can use the downloaded private key file
