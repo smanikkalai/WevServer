@@ -68,7 +68,7 @@ jobs:
       - name: Extract private key file
         run: |
           terraform output private_key_file > private_key.pem
-          echo "::set-env name=PRIVATE_KEY_FILE::private_key.pem"
+          echo "PRIVATE_KEY_FILE=private_key.pem" >> $GITHUB_ENV
 
         # Your other steps here...
 
