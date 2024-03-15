@@ -75,7 +75,7 @@ jobs:
     # Define the artifacts to be uploaded
     # It's placed outside of the build job, in the root of the workflow file
       - name: Upload private key as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/download-artifact@v2
         with:
           name: private-key
           path: ec2-module
