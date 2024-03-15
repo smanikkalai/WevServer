@@ -27,7 +27,7 @@ resource "aws_instance" "web_instance" {
   subnet_id                   = element(aws_subnet.subnet[*].id, count.index % length(aws_subnet.subnet[*].id))
   vpc_security_group_ids      = [aws_security_group.sg.id]
   associate_public_ip_address = true
-  user_data                   = templatefile("./script.sh", {})
+  user_data                   = templatefile("sh ec2-module/script.sh", {})
   tags = var.default_tags
 }
 
