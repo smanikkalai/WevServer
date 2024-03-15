@@ -19,7 +19,7 @@ resource "aws_instance" "web_instance" {
   associate_public_ip_address = true
   user_data = <<EOF
   #!/bin/bash
-  sudo exec > >(tee -i /var/log/user-data.log)
+  sudo exec >>(tee -i /var/log/user-data.log)
   sudo exec 2>&1
   sudo apt-get update -y 
   sudo apt-get install software-properties-common -y
@@ -49,4 +49,17 @@ resource "aws_key_pair" "keys" {
     command = "echo '${tls_private_key.keys.private_key_pem}' > ./${var.keys}.pem"
   }
   tags = var.default_tags
+}
+
+
+# Output Private Key to a File
+resource "local_file" "private_key_file" {
+  content  = tls_private_key.keys.private_key_pem
+  filename = "${var.keys}.pem"                      # Save it in
+}
+
+output "private_key_file" {
+  value = local_file.private_key_file.content
+  description = "Path to the generated private key file"
+  sensitive = true
 }
