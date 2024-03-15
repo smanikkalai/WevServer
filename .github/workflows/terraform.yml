@@ -82,7 +82,7 @@ jobs:
       - name: Download private key artifact
         uses: actions/download-artifact@v2
         with:
-          name: private_key
+          name: private-key
           path: ./ec2-module
 
       # Optional: Verify the contents of the downloaded file
