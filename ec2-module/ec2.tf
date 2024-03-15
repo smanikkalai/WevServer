@@ -13,7 +13,7 @@ resource "aws_instance" "web_instance" {
   count = var.instances_per_subnet
   ami           = var.aws_ami
   instance_type = "t2.micro"
-  key_name      = aws_key_pair.keys.key_name
+  key_name      = aws_key_pair.key_pair.id
   subnet_id                   = element(aws_subnet.subnet[*].id, count.index % length(aws_subnet.subnet[*].id))
   vpc_security_group_ids      = [aws_security_group.sg.id]
   associate_public_ip_address = true
@@ -36,30 +36,19 @@ resource "aws_instance" "web_instance" {
   tags = var.default_tags
 }
 
-resource "tls_private_key" "keys" {
+# Generate SSH Key Pair
+resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
-resource "aws_key_pair" "keys" {
-  key_name   = "keys"       # Create "myKey" to AWS!!
-  public_key = tls_private_key.keys.public_key_openssh
-
-  provisioner "local-exec" { # Create "myKey.pem" to your computer!!
-    command = "echo '${tls_private_key.keys.private_key_pem}' > ./${var.keys}.pem"
-  }
-  tags = var.default_tags
+resource "aws_key_pair" "key_pair" {
+  key_name   = "key"
+  public_key = tls_private_key.ssh_key.public_key_openssh
 }
-
 
 # Output Private Key to a File
 resource "local_file" "private_key_file" {
-  content  = tls_private_key.keys.private_key_pem
-  filename = "${var.keys}.pem"                      # Save it in
-}
-
-output "private_key_file" {
-  value = local_file.private_key_file.content
-  description = "Path to the generated private key file"
-  sensitive = true
+  content  = tls_private_key.ssh_key.private_key_pem
+  filename = "private_key.pem"
 }

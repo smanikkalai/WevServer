@@ -25,9 +25,7 @@ variable "instance_type" {
         default = "t2.micro"
 }
 
-variable "keys" {
-  default = "keys"
-}
+
 
 variable "instances_per_subnet" {
   description = "Number of EC2 instances in each private subnet"
