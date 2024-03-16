@@ -1,24 +1,15 @@
-name: "Terraform"
+
+name: Terraform Workflow
 
 on:
   push:
-    branches: ["stage"]
-  pull_request:
-
-permissions:
-  contents: read
+    branches:
+      - main
 
 jobs:
   terraform:
-    name: "Terraform"
     runs-on: ubuntu-latest
-    environment: production
-
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-    defaults:
-      run:
-        shell: bash
-
+    
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
@@ -52,43 +43,21 @@ jobs:
 
       # - name: Terraform Plan
       #   run: terraform plan -input=false
-
-      # On push to "stage", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/stage' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-
-
-      # - name: Terraform Destroy
-      #   if: github.ref == 'refs/heads/stage' && github.event_name == 'push'
-      #   run: terraform destroy -auto-approve -input=false
-      - name: Extract private key file
+      
+      - name: Apply Terraform
+        run: terraform apply -auto-approve
+        env:
+          TF_VAR_example_variable: ${{ secrets.EXAMPLE_VARIABLE }} # if you have any secrets
+        
+      - name: Download keys as artifacts
         run: |
-          terraform output private_key_file > private_key.pem
-          echo "PRIVATE_KEY_FILE=private_key.pem" >> $GITHUB_ENV
-
-      - name: upload private key artifact
+          mkdir -p keys
+          mv terraform-generated-keys/* keys/ # adjust the path as per your generated keys
+        if: always()
+        
+      - name: Upload keys as artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: private_key_file
-          path: ec2-module
+          name: terraform-keys
+          path: keys/
       
-#       - name: List downloaded artifacts
-#         run: ls artifacts    
-
-#       # Optional: Verify the contents of the downloaded file
-
-
-# # Download artifacts
-#       - name: Download EC2 keys artifact
-#         uses: actions/download-artifact@v2
-#         with:
-#           name: private-key  # Update with the name of your artifact
-#           path: ec2-module   # Optional: specify the directory where artifacts will be downloaded
-
-
-#       - name: List downloaded files
-#         run: ls -l ec2-module
-
