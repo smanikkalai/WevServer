@@ -72,7 +72,7 @@ jobs:
       - name: upload private key artifact
         uses: actions/upload-artifact@v2
         with:
-          name: private-key
+          name: private_key_file
           path: ec2-module
       
 #       - name: List downloaded artifacts
