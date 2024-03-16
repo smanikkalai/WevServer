@@ -70,7 +70,7 @@ jobs:
           echo "PRIVATE_KEY_FILE=private_key.pem" >> $GITHUB_ENV
 
       - name: Download private key artifact
-        uses: actions/download-artifact@v2
+        uses: actions/upload-artifact@v2
         with:
           name: private-key
           path: ec2-module
@@ -78,3 +78,12 @@ jobs:
       # Optional: Verify the contents of the downloaded file
       - name: List downloaded files
         run: ls -l ec2-module
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+      
+      - name: Upload EC2 Key to S3
+        run: |
+          aws s3 cp ec2-module/private_key.pem s3://athenatableacceslaration/Github/
