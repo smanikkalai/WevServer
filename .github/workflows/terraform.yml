@@ -79,4 +79,10 @@ jobs:
       - name: List downloaded files
         run: ls -l ec2-module
 
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ec2-keys
+          path: .
+
 
