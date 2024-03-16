@@ -46,8 +46,7 @@ jobs:
       
       - name: Apply Terraform
         run: terraform apply -auto-approve
-        env:
-          TF_VAR_example_variable: ${{ secrets.EXAMPLE_VARIABLE }} # if you have any secrets
+        
         
       - name: Download keys as artifacts
         run: |
