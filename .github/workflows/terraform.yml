@@ -73,22 +73,22 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: private-key
-          path: private_key.pem
+          path: ec2-module
       
-      - name: List downloaded artifacts
-        run: ls artifacts    
+#       - name: List downloaded artifacts
+#         run: ls artifacts    
 
-      # Optional: Verify the contents of the downloaded file
-
-
-# Download artifacts
-      - name: Download EC2 keys artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: private-key  # Update with the name of your artifact
-          path: ec2-module   # Optional: specify the directory where artifacts will be downloaded
+#       # Optional: Verify the contents of the downloaded file
 
 
-      - name: List downloaded files
-        run: ls -l ec2-module
+# # Download artifacts
+#       - name: Download EC2 keys artifact
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: private-key  # Update with the name of your artifact
+#           path: ec2-module   # Optional: specify the directory where artifacts will be downloaded
+
+
+#       - name: List downloaded files
+#         run: ls -l ec2-module
 
