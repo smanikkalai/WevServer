@@ -69,20 +69,26 @@ jobs:
           terraform output private_key_file > private_key.pem
           echo "PRIVATE_KEY_FILE=private_key.pem" >> $GITHUB_ENV
 
-      - name: Download private key artifact
+      - name: upload private key artifact
         uses: actions/upload-artifact@v2
         with:
           name: private-key
-          path: ec2-module
+          path: artifacts
+      
+      - name: List downloaded artifacts
+        run: ls artifacts    
 
       # Optional: Verify the contents of the downloaded file
-      - name: List downloaded files
-        run: ls -l ec2-module
 
-      - name: Download artifact
+
+# Download artifacts
+      - name: Download EC2 keys artifact
         uses: actions/download-artifact@v2
         with:
-          name: ec2-keys
-          path: .
+          name: private-key  # Update with the name of your artifact
+          path: ec2-module   # Optional: specify the directory where artifacts will be downloaded
 
+
+      - name: List downloaded files
+        run: ls -l ec2-module
 
