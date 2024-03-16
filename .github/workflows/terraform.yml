@@ -79,11 +79,4 @@ jobs:
       - name: List downloaded files
         run: ls -l ec2-module
 
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y awscli
-      
-      - name: Upload EC2 Key to S3
-        run: |
-          aws s3 cp ec2-module/private_key.pem s3://athenatableacceslaration/Github/
+
