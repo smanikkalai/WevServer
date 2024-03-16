@@ -1,11 +1,11 @@
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["amazon"]  # Canonical's AWS account ID for Ubuntu
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-}
+# data "aws_ami" "ubuntu" {
+#   most_recent = true
+#   owners      = ["amazon"]  # Canonical's AWS account ID for Ubuntu
+#   filter {
+#     name   = "name"
+#     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+#   }
+# }
 
 # Generate SSH Key Pair
 resource "tls_private_key" "ssh_key" {
@@ -19,17 +19,17 @@ resource "aws_key_pair" "key_pair" {
 }
 
 // creating two instances
-resource "aws_instance" "web_instance" {
-  count = var.instances_per_subnet
-  ami           = var.aws_ami
-  instance_type = "t2.micro"
-  key_name      = aws_key_pair.key_pair.id
-  subnet_id                   = element(aws_subnet.subnet[*].id, count.index % length(aws_subnet.subnet[*].id))
-  vpc_security_group_ids      = [aws_security_group.sg.id]
-  associate_public_ip_address = true
-  user_data                   = templatefile("ec2-module/script.sh", {})
-  tags = var.default_tags
-}
+# resource "aws_instance" "web_instance" {
+#   count = var.instances_per_subnet
+#   ami           = var.aws_ami
+#   instance_type = "t2.micro"
+#   key_name      = aws_key_pair.key_pair.id
+#   subnet_id                   = element(aws_subnet.subnet[*].id, count.index % length(aws_subnet.subnet[*].id))
+#   vpc_security_group_ids      = [aws_security_group.sg.id]
+#   associate_public_ip_address = true
+#   user_data                   = base64encode(file("ec2-module/script.sh", {}))
+#   tags = var.default_tags
+# }
 
 # Output Private Key to a File
 resource "local_file" "private_key_file" {
