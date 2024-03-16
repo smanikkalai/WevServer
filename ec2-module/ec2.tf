@@ -8,15 +8,15 @@
 # }
 
 # Generate SSH Key Pair
-resource "tls_private_key" "ssh_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
+# resource "tls_private_key" "ssh_key" {
+#   algorithm = "RSA"
+#   rsa_bits  = 4096
+# }
 
-resource "aws_key_pair" "key_pair" {
-  key_name   = "key"
-  public_key = tls_private_key.ssh_key.public_key_openssh
-}
+# resource "aws_key_pair" "key_pair" {
+#   key_name   = "key"
+#   public_key = tls_private_key.ssh_key.public_key_openssh
+# }
 
 // creating two instances
 # resource "aws_instance" "web_instance" {
@@ -32,8 +32,8 @@ resource "aws_key_pair" "key_pair" {
 # }
 
 # Output Private Key to a File
-resource "local_file" "private_key_file" {
-  content  = tls_private_key.ssh_key.private_key_pem
-  filename = "private_key.pem"
-}
+# resource "local_file" "private_key_file" {
+#   content  = tls_private_key.ssh_key.private_key_pem
+#   filename = "private_key.pem"
+# }
 
