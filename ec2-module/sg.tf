@@ -14,6 +14,15 @@ resource "aws_security_group" "sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
+
+  // Ingress rule allowing traffic from local IP
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["self"]
+  }
+
   ingress {
     description      = "HTTP from VPC"
     from_port        = 80
