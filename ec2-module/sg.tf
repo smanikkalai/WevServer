@@ -1,12 +1,12 @@
 ##############################################################################################################################
 
-data "http" "myipip" {
+data "http" "myip" {
   url = "https://ipv4.icanhazip.com"
 }
 
-output "ip" {
-  value = data.http.myipip.response_body
-}
+# output "ip" {
+#   value = data.http.myip.response_body
+# }
 
 
 resource "aws_security_group" "sg" {
