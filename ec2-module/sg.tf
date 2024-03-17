@@ -1,5 +1,14 @@
 ##############################################################################################################################
 
+data "http" "ip" {
+  url = "https://ifconfig.me/ip"
+}
+
+output "ip" {
+  value = data.http.ip.response_body
+}
+
+
 resource "aws_security_group" "sg" {
   name        = "allow_ssh_http"
   description = "Allow ssh http inbound traffic"
@@ -20,7 +29,7 @@ resource "aws_security_group" "sg" {
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    cidr_blocks = ["self"]
+    cidr_blocks = ["output.ip.value"]
   }
 
   ingress {
