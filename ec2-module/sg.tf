@@ -29,7 +29,7 @@ resource "aws_security_group" "sg" {
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    cidr_blocks = ["output.ip.value"]
+    cidr_blocks = output.ip.value
   }
 
   ingress {
