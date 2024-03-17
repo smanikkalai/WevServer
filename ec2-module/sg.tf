@@ -1,11 +1,11 @@
 ##############################################################################################################################
 
-data "http" "myip" {
+data "http" "myipip" {
   url = "https://ipv4.icanhazip.com"
 }
 
 output "ip" {
-  value = data.http.ip.response_body
+  value = data.http.myipip.response_body
 }
 
 
