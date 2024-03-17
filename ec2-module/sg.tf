@@ -1,7 +1,7 @@
 ##############################################################################################################################
 
-data "http" "ip" {
-  url = "https://ifconfig.me/ip"
+data "http" "myip" {
+  url = "https://ipv4.icanhazip.com"
 }
 
 output "ip" {
@@ -26,12 +26,12 @@ resource "aws_security_group" "sg" {
 
   // Ingress rule allowing traffic from local IP
   ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = output.ip.value
+    from_port = 5432
+    to_port = 5432
+    protocol = "tcp"
+    cidr_blocks = ["${chomp(data.http.myip.response_body)}/32"]
   }
-
+  
   ingress {
     description      = "HTTP from VPC"
     from_port        = 80
