@@ -3,10 +3,10 @@
 # ##############################################################################################################################
 
 
-# variable "region" {
-#     type = string
-#     default = "us-east-1"
-# }
+variable "region" {
+    type = string
+    default = "us-east-1"
+}
 
 
 variable "vpc" {
@@ -14,21 +14,21 @@ variable "vpc" {
 }
 
 
-# variable "instance_name" {
-#         description = "Name of the instance to be created"
-#         default = "aws-demo" 
-# }
+variable "instance_name" {
+        description = "Name of the instance to be created"
+        default = "aws-demo" 
+}
 
 
-# variable "aws_ami" {
-#         description = "Name of the instance to be created"
-#         default = "ami-07d9b9ddc6cd8dd30"
-# }
+variable "aws_ami" {
+        description = "Name of the instance to be created"
+        default = "ami-07d9b9ddc6cd8dd30"
+}
 
 
-# variable "instance_type" {
-#         default = "t2.micro"
-# }
+variable "instance_type" {
+        default = "t2.micro"
+}
 
 
 
