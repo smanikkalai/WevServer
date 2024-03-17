@@ -9,9 +9,9 @@
 # }
 
 
-# variable "vpc" {
-#     default = "10.0.0.0/16"
-# }
+variable "vpc" {
+    default = "10.0.0.0/16"
+}
 
 
 # variable "instance_name" {
@@ -32,11 +32,11 @@
 
 
 
-# variable "instances_per_subnet" {
-#   description = "Number of EC2 instances in each private subnet"
-#   type        = number
-#   default     = 2
-# }
+variable "instances_per_subnet" {
+  description = "Number of EC2 instances in each private subnet"
+  type        = number
+  default     = 2
+}
 
 
 variable "default_tags" {
