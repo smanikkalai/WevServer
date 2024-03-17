@@ -39,14 +39,14 @@
 # }
 
 
-# variable "default_tags" {
-#   type    = map(string)
-#   default = {
-#     Name        = "WebServer"
-#     Environment = "Production"
-#     Owner       = "SelvarajManikkalai"
-#     Platform    = "IAAS"
-#   }
-# }
+variable "default_tags" {
+  type    = map(string)
+  default = {
+    Name        = "WebServer"
+    Environment = "Production"
+    Owner       = "SelvarajManikkalai"
+    Platform    = "IAAS"
+  }
+}
 
 # ##############################################################################################################################
