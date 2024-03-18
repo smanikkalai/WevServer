@@ -1,7 +1,9 @@
-WerbServer Deployment Using Terraform in Github
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
+Deploying E-Commerce Application Using Terraform and GitHub Actions.
+
+
+
+
+
 Deploying a web server using Terraform involves several steps, including defining the infrastructure as code, provisioning resources, and managing configurations. Below is a general outline of how you can deploy a web server using Terraform:
 Define Provider:
 Start by defining the cloud provider you want to use. For example, if you're deploying to AWS, you'll define the AWS provider in your Provioder.tf file:
@@ -16,18 +18,22 @@ terraform {
   }
 }
 
+
+
+
+
+
+
+
+
 provider "aws" {
   region = "us-east-1"
 }
-##############################################################################################################################
-##############################################################################################################################
 To deploy an EC2 instance using a module in Terraform, you can organize your Terraform configuration into modules. This allows for better organization, reusability, and maintainability of your infrastructure code. Below is an example of how to create a Terraform module for deploying an EC2 instance:
 // module ec2.
 module "ec2" {
   source = "./ec2-module"
 }
-##############################################################################################################################
-##############################################################################################################################
 To use an S3 bucket as a backend for storing Terraform state, you need to configure Terraform to save its state file (terraform. tfstate) in an S3 bucket. This allows for better collaboration, state locking, and centralized storage of the Terraform state. Here's how you can set it up:
 terraform {
   backend "s3" {
@@ -36,12 +42,20 @@ terraform {
     region = "us-east-1"
   }
 }
+
+
+
+
+
+
+
+
 Defining Variables:
 You can define variables in your Terraform configuration using the variable block. Variables can have default values and descriptions to make your configuration more self-documenting.
 Example:
 
-##############################################################################################################################
-##############################################################################################################################
+#############################VARIABLS#####################################
+##########################################################################
 
 variable "region" {
     type = string
@@ -82,10 +96,21 @@ variable "default_tags" {
   }
 }
 
-##############################################################################################################################
-##############################################################################################################################
+
+
+
+
+
+
+
 Define Security Group:
-Create a new Terraform configuration file (e.g., security_group.tf) and define your security group using the aws_security_group resource.
+Create a new Terraform configuration file (e.g., security_group.tf) and define your security group using the aws_security_group resource based on your local IP.
+##############################################################################################################################
+
+data "http" "myip" {
+  url = "https://ipv4.icanhazip.com"
+}
+
 resource "aws_security_group" "sg" {
   name        = "allow_ssh_http"
   description = "Allow ssh http inbound traffic"
@@ -96,19 +121,18 @@ resource "aws_security_group" "sg" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
+    cidr_blocks      = ["${chomp(data.http.myip.response_body)}/32"]
   }
 
+  // Ingress rule allowing traffic from local IP
   ingress {
     description      = "HTTP from VPC"
     from_port        = 80
     to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
+    protocol = "tcp"
+    cidr_blocks = ["${chomp(data.http.myip.response_body)}/32"]
   }
-
+ 
   egress {
     from_port        = 0
     to_port          = 0
@@ -119,7 +143,10 @@ resource "aws_security_group" "sg" {
   tags = var.default_tags
 }
 
-##############################################################################################################################
+
+
+
+
 ##############################################################################################################################
 Outputs in Terraform provide a convenient way to extract and use specific information from your infrastructure, enabling better visibility and integration with other tools and processes.
 output "webServer" {
@@ -136,8 +163,11 @@ output "private_key_file" {
   sensitive = true
 }
 
-##############################################################################################################################
-##############################################################################################################################
+
+
+
+
+
 
 In Terraform, you can define a Virtual Private Cloud (VPC) using the aws_vpc resource. A VPC allows you to create a logically isolated section of the AWS cloud where you can launch AWS resources in a virtual network that you define. Here's how you can define and configure a VPC using Terraform:
 # VPC creations
@@ -196,8 +226,11 @@ resource "aws_route_table" "private" {
     tags = var.default_tags
 }
 
-##############################################################################################################################
-##############################################################################################################################
+
+
+
+
+
 #Association Between route-table and subnets
 
 # aws_subnet_route_table_association
@@ -211,9 +244,10 @@ resource "aws_route_table_association" "associate2" {
     route_table_id = aws_route_table.igw-rt.id
 }
 
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
+
+
+
+
 
 To create an EC2 instance using Terraform, you'll need to define an EC2 resource block in your Terraform configuration. In AWS, a key pair is used to securely connect to your EC2 instances. When you create an EC2 instance, you can specify a key pair, and AWS will associate the public key with the instance. You can then use the corresponding private key to authenticate and connect to the instance securely via SSH.
 Here's a step-by-step guide:
@@ -225,6 +259,11 @@ data "aws_ami" "ubuntu" {
     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
 }
+
+
+
+
+
 
 # Generate SSH Key Pair
 resource "tls_private_key" "ssh_key" {
@@ -250,15 +289,27 @@ resource "aws_instance" "web_instance" {
   tags = var.default_tags
 }
 
+
+
+
+
+
 # Output Private Key to a File
 resource "local_file" "private_key_file" {
   content  = tls_private_key.ssh_key.private_key_pem
   filename = "private_key.pem"
 }
 
-##############################################################################################################################
-##############################################################################################################################
+
+
+
 The script is below,
+
+
+
+
+
+
 #/bin/bash
 sudo apt-get update -y 
 sudo apt-get install software-properties-common -y
@@ -273,10 +324,6 @@ docker-compose up -d
 sleep 45
 exec > > (tee -i /var/log/user-data.log)
 exec 2>&1
-
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
 If you want to save the private key of an AWS key pair as an artifact in GitHub, you can follow these general steps:
 
     - name: Upload EC2 Key as Artifact
@@ -284,6 +331,18 @@ If you want to save the private key of an AWS key pair as an artifact in GitHub,
       with:
         name: ec2-private-key
         path: private_key.pem  
+
+
+
+
+
+
+
+
+
+
+
+
 To create a GitHub Actions workflow for deploying infrastructure with Terraform, you need to define a YAML file within your repository's .github/workflows directory. This YAML file will contain the steps to execute the Terraform commands. Here's a basic example:
 name: 'Terraform'
 
@@ -354,30 +413,28 @@ jobs:
         name: ec2-private-key
         path: private_key.pem
 
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
+
+
+
+
+
 
 To run the GitHub Actions workflow you've defined, you simply need to push your changes to the main branch of your repository. Here's a quick recap of the steps:
-
 If you want to check the status of your local Git repository, you can use the git status command. This command shows you information about which files have been modified, staged, or are untracked in your working directory. Here's how you can use it:
-The git add . command is used to stage all changes in your working directory for the next commit. This includes new files, modified files, and deleted files. 
-##############################################################################################################################
-##############################################################################################################################
-Here's how you can use it:
+The git add . command is used to stage all changes in your working directory for the next commit. This includes new files, modified files, and deleted files. Here's how you can use it:
+
+
 To commit changes to your local Git repository,
+
+
 you use the git commit -m "...." command. This command captures the changes you've staged using git add and creates a new commit with a message describing the changes. Here's how you can use it:
+
+
 To push your committed changes from your local Git repository to a remote repository (such as one hosted on GitHub), you use the git push command. Here's how to do it:
-Go to GitHub Actions, You can see that the applying resource details in AWS.
-The private key has been saved into the artifact
-How to get the Private key in Local after deployment;
-You can choose the summary option in Git Hub and download the key file.
-Now, You can see the Instances in the AWS console,
-Here, you can see the webserver is hosting the website;
+1. Go to GitHub Actions, You can see that the applying resource details in AWS.
+2. The private key has been saved into the artifact
+3. How to get the Private key in Local after deployment;
+4. You can choose the summary option in Git Hub and download the key file.
+5. Now, You can see the Instances in the AWS console,
+6. Here, you can see the webserver is hosting the website;
 Done.
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
